@@ -1,8 +1,8 @@
-const fetcher = async (url) => {
-    const res = await fetch(url)
+const fetcher = async (url, headerData = {}) => {
+    const res = await fetch(url, headerData)
     const data = await res.json()
 
-    if (res.status !== 200) {
+    if (res.status !== 200 && false) {
         throw new Error(data.message)
     }
 

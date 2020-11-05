@@ -1,14 +1,12 @@
-import React, { createRef, useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import React, { createRef, useEffect, useLayoutEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { fetchMessages, postMessage } from '../../store/actions/message'
+import { fetchMessages } from '../../store/actions/message'
 
 import Message from './Message'
 import Form from './Form'
 
 export default function Right({ ...props }) {
-    const [messageForm, setMessageForm] = useState('')
-
     const bodyRef = createRef()
 
     const conversationId = props.match.params.id
@@ -29,19 +27,6 @@ export default function Right({ ...props }) {
         scrollDown()
     })
 
-    // Form
-    const changeFilter = useCallback((message) => {
-        setMessageForm(message)
-    }, [])
-
-    const submitForm = (e) => {
-        e.preventDefault()
-
-        dispatch(postMessage(messageForm, conversationId))
-
-        setMessageForm('')
-    }
-
     return (
         <div className="col-7 px-0">
             <div className="px-4 py-5 chat-box bg-white" ref={bodyRef}>
@@ -51,7 +36,7 @@ export default function Right({ ...props }) {
                       })
                     : '...'}
             </div>
-            <Form onSubmitForm={submitForm} onChangeInput={changeFilter} value={messageForm} />
+            <Form conversationId={conversationId} />
         </div>
     )
 }

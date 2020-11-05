@@ -12,6 +12,20 @@ export const conversationsReducer = (state = initialState, action) => {
                 conversations: action.payload
             }
 
+        case types.SET_CONVERSATIONS_LAST_MESSAGE:
+            const lastMessage = state.conversations.map((conversation) => {
+                return conversation.conversationId == action.payload.conversationId
+                    ? ((conversation.content = action.payload.message.content),
+                      (conversation.createdAt = action.payload.message.createdAt),
+                      Object.assign({}, conversation))
+                    : conversation
+            })
+
+            return {
+                ...state,
+                conversations: lastMessage
+            }
+
         default:
             return state
     }
