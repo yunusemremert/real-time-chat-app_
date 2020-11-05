@@ -10,3 +10,5 @@ export const fetchMessages = (id) => async (dispatch) => {
         payload: data
     })
 }
+
+export const postMessage = (message, conversationId) => async (dispatch) => {}
