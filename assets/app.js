@@ -18,7 +18,11 @@ import store from './react/store'
 import { Provider } from 'react-redux'
 import { MemoryRouter } from 'react-router-dom'
 
+import { setUsername } from './react/store/actions/conversation'
+
 import App from './react/components/App'
+
+store.dispatch(setUsername(document.querySelector('#app').dataset.username))
 
 ReactDOM.render(
     <Provider store={store}>

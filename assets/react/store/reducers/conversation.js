@@ -1,11 +1,25 @@
 import * as types from '../types'
 
 const initialState = {
-    conversations: []
+    conversations: [],
+    hubUrl: null,
+    username: null
 }
 
 export const conversationsReducer = (state = initialState, action) => {
     switch (action.type) {
+        case types.SET_USERNAME:
+            return {
+                ...state,
+                username: action.payload
+            }
+
+        case types.SET_HUBURL:
+            return {
+                ...state,
+                hubUrl: action.payload
+            }
+
         case types.GET_CONVERSATIONS:
             return {
                 ...state,

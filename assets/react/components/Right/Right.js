@@ -1,7 +1,7 @@
 import React, { createRef, useEffect, useLayoutEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { fetchMessages } from '../../store/actions/message'
+import { fetchMessages, setMessage } from '../../store/actions/message'
 
 import Message from './Message'
 import Form from './Form'
@@ -12,7 +12,9 @@ export default function Right({ ...props }) {
     const conversationId = props.match.params.id
 
     const dispatch = useDispatch()
+
     const { messages } = useSelector((state) => state.messages)
+    const { hubUrl } = useSelector((state) => state.conversations)
 
     useEffect(() => {
         dispatch(fetchMessages(conversationId))
@@ -25,7 +27,25 @@ export default function Right({ ...props }) {
 
     useLayoutEffect(() => {
         scrollDown()
-    })
+    }, [messages])
+
+    useEffect(() => {
+        if (hubUrl) {
+            let url = new URL(hubUrl)
+
+            url.searchParams.append('topic', `/conversations/${props.match.params.id}`)
+
+            const eventSource = new EventSource(url, {
+                withCredentials: true
+            })
+
+            eventSource.onmessage = function (event) {
+                const data = JSON.parse(event.data)
+
+                dispatch(setMessage(data, data.conversation.id))
+            }
+        }
+    }, [hubUrl])
 
     return (
         <div className="col-7 px-0">

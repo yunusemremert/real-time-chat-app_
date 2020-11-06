@@ -4,14 +4,34 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchConversations } from '../../store/actions/conversation'
 
 import Conversation from './Conversation'
+import { setConversationLastMessage } from '../../store/actions/message'
 
 function Left() {
     const dispatch = useDispatch()
-    const { conversations } = useSelector((state) => state.conversations)
+
+    const { conversations, hubUrl, username } = useSelector((state) => state.conversations)
 
     useEffect(() => {
         dispatch(fetchConversations())
     }, [])
+
+    useEffect(() => {
+        if (hubUrl) {
+            let url = new URL(hubUrl)
+
+            url.searchParams.append('topic', `/conversations/${username}`)
+
+            const eventSource = new EventSource(url, {
+                withCredentials: true
+            })
+
+            eventSource.onmessage = function (event) {
+                const data = JSON.parse(event.data)
+
+                dispatch(setConversationLastMessage(data, data.conversation.id))
+            }
+        }
+    }, [hubUrl])
 
     return (
         <div className="col-5 px-0">
