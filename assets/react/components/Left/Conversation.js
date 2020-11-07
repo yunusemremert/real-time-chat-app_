@@ -7,7 +7,8 @@ export default function Conversation({ conversation }) {
     return (
         <NavLink
             to={`/conversation/${conversation.conversationId}`}
-            className="list-group-item list-group-item-action active text-white rounded-0"
+            className="list-group-item list-group-item-action rounded-0"
+            activeClassName="active text-white "
         >
             <div className="media">
                 <img src={img} alt="user" width="50" className="rounded-circle" />
